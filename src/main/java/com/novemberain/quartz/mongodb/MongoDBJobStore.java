@@ -886,6 +886,7 @@ public class MongoDBJobStore implements JobStore, Constants {
     trigger.put(TRIGGER_PREVIOUS_FIRE_TIME, newTrigger.getPreviousFireTime());
     trigger.put(TRIGGER_PRIORITY, newTrigger.getPriority());
     trigger.put(TRIGGER_START_TIME, newTrigger.getStartTime());
+    trigger.putAll(newTrigger.getJobDataMap());
 
     TriggerPersistenceHelper tpd = triggerPersistenceDelegateFor(newTrigger);
     trigger = (BasicDBObject) tpd.injectExtraPropertiesForInsert(newTrigger, trigger);

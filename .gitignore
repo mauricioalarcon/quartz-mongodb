@@ -8,6 +8,6 @@ lib/*
 *~
 src/legacytest/*
 checkouts/*
-.idea/workspace.xml
+.idea/*
 .lein-*
 /bin
