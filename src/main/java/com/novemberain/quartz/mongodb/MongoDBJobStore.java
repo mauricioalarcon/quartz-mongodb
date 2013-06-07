@@ -209,8 +209,11 @@ public class MongoDBJobStore implements JobStore, Constants {
         // remove it
         if (!job.containsField(JOB_DURABILITY) || job.get(JOB_DURABILITY).toString().equals("false")) {
           DBCursor referencedTriggers = triggerCollection.find(new BasicDBObject(TRIGGER_JOB_ID, job.get("_id")));
-          if (referencedTriggers != null && referencedTriggers.count() == 0) {
-            jobCollection.remove(job);
+          if (referencedTriggers != null && referencedTriggers.count() == 1 && referencedTriggers.hasNext()) {
+        	DBObject referenceTrigger = referencedTriggers.next();
+        	if (referenceTrigger.containsField(TRIGGER_KEY_NAME) && referenceTrigger.get(TRIGGER_KEY_NAME).equals(trigger.get(TRIGGER_KEY_NAME)) ) {
+        		jobCollection.remove(job);
+        	}
           }
         }
       } else {
@@ -853,8 +856,8 @@ public class MongoDBJobStore implements JobStore, Constants {
     keys = new BasicDBObject();
     keys.put(KEY_NAME, 1);
     keys.put(KEY_GROUP, 1);
-    keys.put(TRIGGER_NEXT_FIRE_TIME, 1);
-    keys.put(TRIGGER_PREVIOUS_FIRE_TIME, 1);
+//    keys.put(TRIGGER_NEXT_FIRE_TIME, 1);
+//    keys.put(TRIGGER_PREVIOUS_FIRE_TIME, 1);
     triggerCollection.ensureIndex(keys, null, true);
 
     keys = new BasicDBObject();
